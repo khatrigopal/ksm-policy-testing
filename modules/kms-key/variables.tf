@@ -1,7 +1,4 @@
-variable "key_description" {
-  type        = string
-  description = "The description for the KMS key"
-}
+
 
 variable "alias_name" {
   type        = string
