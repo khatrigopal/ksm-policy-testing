@@ -1,10 +1,32 @@
-resource "aws_kms_key" "my_kms_key" {
-  description = var.key_description
-  policy      = data.aws_iam_policy_document.kms_policy.json
+resource "aws_kms_key" "kms_key" {
+  description             = "KMS key for encrypting sensitive data"
+  enable_key_rotation     = true
+  policy                  = data.aws_iam_policy_document.kms_policy.json
+  deletion_window_in_days = 7
 }
 
+data "aws_iam_policy_document" "kms_policy" {
+  statement {
+    sid    = "Enable IAM User Permissions"
+    effect = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+
+    actions = [
+      "kms:*"
+    ]
+
+    resources = [
+      aws_kms_key.kms_key.arn
+    ]
+  }
+}
 
 resource "aws_kms_alias" "kms_key_alias" {
-  name          = var.alias_name
-  target_key_id = aws_kms_key.my_kms_key.id
+  name          = var.key_alias
+  target_key_id = aws_kms_key.kms_key.key_id
 }
+
