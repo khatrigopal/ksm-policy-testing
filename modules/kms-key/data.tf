@@ -2,18 +2,19 @@ data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "kms_policy" {
   statement {
-    sid = "Enable IAM User Permission"
-    effect  = "Allow"
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey",
+    ]
+
+    resources = ["${aws_kms_key.kms_key.arn}"]
+
     principals {
-      type = "AWS"
-      #identifiers = ["*"]
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
-      
+      type        = "AWS"
+      identifiers = ["${var.principal_arn}"]
     }
-    actions = ["kms:*"]
-    resources = ["*"]
-    
-      #aws_kms_key.my_kms_key.arn,
-    #]
   }
 }
