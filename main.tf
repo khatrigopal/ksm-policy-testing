@@ -6,6 +6,5 @@ variable "alias_name" {
 
 module "kms_key_alias" {
   source          = "./modules/kms-key"
-  key_description = "My KMS key"
-  alias_name      = "alias/testing"
+  alias_name      = "alias/teston24th"
 }
